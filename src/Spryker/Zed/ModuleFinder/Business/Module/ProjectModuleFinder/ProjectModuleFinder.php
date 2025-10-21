@@ -84,6 +84,8 @@ class ProjectModuleFinder implements ProjectModuleFinderInterface
         foreach ($this->config->getProjectOrganizations() as $organization) {
             foreach ($this->config->getApplications() as $application) {
                 $projectOrganizationModuleDirectories[] = sprintf('%1$s/%2$s/*/src/%2$s/%3$s/', APPLICATION_SOURCE_DIR, $organization, $application);
+                // BC: To not break projects prior to the Project Structure refactoring, we keep the former path variation here as well.
+                $projectOrganizationModuleDirectories[] = sprintf('%s/*/%s/', APPLICATION_SOURCE_DIR, $application);
             }
         }
 
