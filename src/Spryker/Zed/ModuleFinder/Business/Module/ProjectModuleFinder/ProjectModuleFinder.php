@@ -80,8 +80,11 @@ class ProjectModuleFinder implements ProjectModuleFinderInterface
     protected function getProjectDirectories(): array
     {
         $projectOrganizationModuleDirectories = [];
-        foreach ($this->config->getApplications() as $application) {
-            $projectOrganizationModuleDirectories[] = sprintf('%s/*/%s/', APPLICATION_SOURCE_DIR, $application);
+
+        foreach ($this->config->getProjectOrganizations() as $organization) {
+            foreach ($this->config->getApplications() as $application) {
+                $projectOrganizationModuleDirectories[] = sprintf('%1$s/%2$s/*/src/%2$s/%3$s/', APPLICATION_SOURCE_DIR, $organization, $application);
+            }
         }
 
         return array_filter($projectOrganizationModuleDirectories, 'glob');
@@ -98,8 +101,10 @@ class ProjectModuleFinder implements ProjectModuleFinderInterface
         $finder
             ->directories()
             ->depth('== 0')
-            ->in($projectOrganizationModuleDirectories)
-            ->sort($this->getFilenameSortCallback());
+            ->in($projectOrganizationModuleDirectories);
+
+        // Commented out for performance reasons. Only useful while debugging
+        // ->sort($this->getFilenameSortCallback());
 
         return $finder;
     }
@@ -181,11 +186,10 @@ class ProjectModuleFinder implements ProjectModuleFinderInterface
     protected function getOrganizationNameFromDirectory(SplFileInfo $directoryInfo): string
     {
         $pathFragments = explode(DIRECTORY_SEPARATOR, (string)$directoryInfo->getRealPath());
-        $srcPosition = array_search('src', $pathFragments);
+        $srcKeys = array_keys($pathFragments, 'src');
+        $srcPosition = end($srcKeys);
 
-        $organizationName = $pathFragments[$srcPosition + 1];
-
-        return $organizationName;
+        return $pathFragments[$srcPosition + 1];
     }
 
     /**
@@ -196,11 +200,10 @@ class ProjectModuleFinder implements ProjectModuleFinderInterface
     protected function getApplicationNameFromDirectory(SplFileInfo $directoryInfo): string
     {
         $pathFragments = explode(DIRECTORY_SEPARATOR, (string)$directoryInfo->getRealPath());
-        $srcPosition = array_search('src', $pathFragments);
+        $srcKeys = array_keys($pathFragments, 'src');
+        $srcPosition = end($srcKeys);
 
-        $organizationName = $pathFragments[$srcPosition + 2];
-
-        return $organizationName;
+        return $pathFragments[$srcPosition + 2];
     }
 
     /**
@@ -220,6 +223,10 @@ class ProjectModuleFinder implements ProjectModuleFinderInterface
      */
     protected function buildOrganizationModuleKey(ModuleTransfer $moduleTransfer): string
     {
+        if ($moduleTransfer->getOrganization() === null || $moduleTransfer->getName() === null) {
+            return '';
+        }
+
         return sprintf('%s.%s', $moduleTransfer->getOrganization()->getName(), $moduleTransfer->getName());
     }
 }

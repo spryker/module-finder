@@ -7,6 +7,7 @@
 
 namespace Spryker\Zed\ModuleFinder;
 
+use Spryker\Shared\Kernel\KernelConstants;
 use Spryker\Zed\Kernel\AbstractBundleConfig;
 
 class ModuleFinderConfig extends AbstractBundleConfig
@@ -21,6 +22,16 @@ class ModuleFinderConfig extends AbstractBundleConfig
         'spryker-sdk',
         'spryker-middleware',
     ];
+
+    /**
+     * @api
+     *
+     * @return array<string>
+     */
+    public function getProjectOrganizations(): array
+    {
+        return $this->get(KernelConstants::PROJECT_NAMESPACES);
+    }
 
     /**
      * @api
