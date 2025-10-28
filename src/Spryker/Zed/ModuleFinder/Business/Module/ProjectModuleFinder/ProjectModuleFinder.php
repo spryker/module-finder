@@ -191,7 +191,7 @@ class ProjectModuleFinder implements ProjectModuleFinderInterface
         $srcKeys = array_keys($pathFragments, 'src');
         $srcPosition = end($srcKeys);
 
-        return $pathFragments[$srcPosition + 1];
+        return $pathFragments[(int)$srcPosition + 1];
     }
 
     /**
@@ -205,7 +205,7 @@ class ProjectModuleFinder implements ProjectModuleFinderInterface
         $srcKeys = array_keys($pathFragments, 'src');
         $srcPosition = end($srcKeys);
 
-        return $pathFragments[$srcPosition + 2];
+        return $pathFragments[(int)$srcPosition + 2];
     }
 
     /**

@@ -101,6 +101,21 @@ class ModuleFinderConfig extends AbstractBundleConfig
             $organizationPaths[] = $nonsplitFeatureDirectory;
         }
 
+        $nonsplitFeatureDirectory = sprintf('%s/src/Spryker/', APPLICATION_ROOT_DIR);
+        if (is_dir($nonsplitFeatureDirectory)) {
+            $organizationPaths[] = $nonsplitFeatureDirectory;
+        }
+
+        $nonsplitFeatureDirectory = sprintf('%s/src/SprykerShop/', APPLICATION_ROOT_DIR);
+        if (is_dir($nonsplitFeatureDirectory)) {
+            $organizationPaths[] = $nonsplitFeatureDirectory;
+        }
+
+        $nonsplitFeatureDirectory = sprintf('%s/src/SprykerFeature/', APPLICATION_ROOT_DIR);
+        if (is_dir($nonsplitFeatureDirectory)) {
+            $organizationPaths[] = $nonsplitFeatureDirectory;
+        }
+
         return $organizationPaths;
     }
 }
