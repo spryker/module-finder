@@ -8,6 +8,7 @@
 namespace Spryker\Zed\ModuleFinder\Business;
 
 use Generated\Shared\Transfer\ModuleFilterTransfer;
+use Spryker\Shared\ModuleFinder\Transfer\ModuleFilter;
 
 interface ModuleFinderFacadeInterface
 {
@@ -32,11 +33,9 @@ interface ModuleFinderFacadeInterface
      *
      * @api
      *
-     * @param \Generated\Shared\Transfer\ModuleFilterTransfer|null $moduleFilterTransfer
-     *
      * @return array<\Generated\Shared\Transfer\ModuleTransfer>
      */
-    public function getProjectModules(?ModuleFilterTransfer $moduleFilterTransfer = null): array;
+    public function getProjectModules(ModuleFilterTransfer|ModuleFilter|null $moduleFilterTransfer = null): array;
 
     /**
      * Specification:
@@ -50,4 +49,24 @@ interface ModuleFinderFacadeInterface
      * @return array<\Generated\Shared\Transfer\PackageTransfer>
      */
     public function getPackages(): array;
+
+    /**
+     * Specification:
+     * - Returns a list of all installed composer packages.
+     *
+     * @api
+     *
+     * @return array<string>
+     */
+    public function getInstalledPackageNames(): array;
+
+    /**
+     * Specification:
+     * - Returns a list of all composer packages installed in dev mode.
+     *
+     * @api
+     *
+     * @return array<string>
+     */
+    public function getDevPackageNames(): array;
 }

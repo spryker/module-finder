@@ -7,6 +7,7 @@
 
 namespace Spryker\Zed\ModuleFinder;
 
+use Spryker\Shared\Application\ApplicationConstants;
 use Spryker\Shared\Kernel\KernelConstants;
 use Spryker\Zed\Kernel\AbstractBundleConfig;
 
@@ -117,5 +118,37 @@ class ModuleFinderConfig extends AbstractBundleConfig
         }
 
         return $organizationPaths;
+    }
+
+    /**
+     * @api
+     *
+     * @return array<string>
+     */
+    public function getCoreNamespaces(): array
+    {
+        return $this->get(KernelConstants::CORE_NAMESPACES);
+    }
+
+    /**
+     * @api
+     *
+     * @return array<string>
+     */
+    public function getExcludedFileNames(): array
+    {
+        return [
+            '*DependencyProvider.php',
+        ];
+    }
+
+    /**
+     * @api
+     *
+     * @return bool
+     */
+    public function isDevelopmentMode(): bool
+    {
+        return $this->get(ApplicationConstants::ENABLE_APPLICATION_DEBUG, false);
     }
 }

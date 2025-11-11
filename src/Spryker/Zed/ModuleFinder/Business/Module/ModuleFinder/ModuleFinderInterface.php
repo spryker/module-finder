@@ -8,13 +8,12 @@
 namespace Spryker\Zed\ModuleFinder\Business\Module\ModuleFinder;
 
 use Generated\Shared\Transfer\ModuleFilterTransfer;
+use Spryker\Shared\ModuleFinder\Transfer\ModuleFilter;
 
 interface ModuleFinderInterface
 {
     /**
-     * @param \Generated\Shared\Transfer\ModuleFilterTransfer|null $moduleFilterTransfer
-     *
-     * @return array<\Generated\Shared\Transfer\ModuleTransfer>
+     * @return array<\Generated\Shared\Transfer\ModuleTransfer|\Spryker\Shared\ModuleFinder\Transfer\Module>
      */
-    public function getModules(?ModuleFilterTransfer $moduleFilterTransfer = null): array;
+    public function getModules(ModuleFilterTransfer|ModuleFilter|null $moduleFilterTransfer = null): array;
 }

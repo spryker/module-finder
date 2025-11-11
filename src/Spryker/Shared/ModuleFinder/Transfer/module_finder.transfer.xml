@@ -5,6 +5,7 @@
         <property name="organization" type="Organization"/>
         <property name="module" type="Module"/>
         <property name="application" type="Application"/>
+        <property name="isProjectOnly" type="bool" description="When a module is only used on the project level this is set to true."/>
     </transfer>
 
     <transfer name="Package">
@@ -24,6 +25,8 @@
         <property name="applications" type="Application[]" singular="application"/>
         <property name="path" type="string"/>
         <property name="isStandalone" type="bool"/>
+        <property name="isProjectOnly" type="bool" description="When a module is only used on the project level this is set to true."/>
+        <property name="usedModules" type="Module[]" singular="usedModule" description="Contains all modules this module uses."/>
     </transfer>
 
     <transfer name="Organization">

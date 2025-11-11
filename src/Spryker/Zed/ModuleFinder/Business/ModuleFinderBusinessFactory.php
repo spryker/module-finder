@@ -8,6 +8,8 @@
 namespace Spryker\Zed\ModuleFinder\Business;
 
 use Spryker\Zed\Kernel\Business\AbstractBusinessFactory;
+use Spryker\Zed\ModuleFinder\Business\Composer\ComposerReader;
+use Spryker\Zed\ModuleFinder\Business\Composer\ComposerReaderInterface;
 use Spryker\Zed\ModuleFinder\Business\Module\ModuleFinder\ModuleFinder;
 use Spryker\Zed\ModuleFinder\Business\Module\ModuleFinder\ModuleFinderInterface;
 use Spryker\Zed\ModuleFinder\Business\Module\ModuleMatcher\ModuleMatcher;
@@ -45,7 +47,11 @@ class ModuleFinderBusinessFactory extends AbstractBusinessFactory
      */
     public function createProjectModuleFinder(): ProjectModuleFinderInterface
     {
-        return new ProjectModuleFinder($this->getConfig(), $this->createModuleMatcher());
+        return new ProjectModuleFinder(
+            $this->getConfig(),
+            $this->createModuleMatcher(),
+            $this->createComposerReader(),
+        );
     }
 
     /**
@@ -54,5 +60,13 @@ class ModuleFinderBusinessFactory extends AbstractBusinessFactory
     public function createPackageFinder(): PackageFinderInterface
     {
         return new PackageFinder($this->getConfig());
+    }
+
+    /**
+     * @return \Spryker\Zed\ModuleFinder\Business\Composer\ComposerReaderInterface
+     */
+    public function createComposerReader(): ComposerReaderInterface
+    {
+        return new ComposerReader($this->getConfig());
     }
 }

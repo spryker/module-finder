@@ -8,6 +8,7 @@
 namespace Spryker\Zed\ModuleFinder\Business;
 
 use Generated\Shared\Transfer\ModuleFilterTransfer;
+use Spryker\Shared\ModuleFinder\Transfer\ModuleFilter;
 use Spryker\Zed\Kernel\Business\AbstractFacade;
 
 /**
@@ -22,11 +23,9 @@ class ModuleFinderFacade extends AbstractFacade implements ModuleFinderFacadeInt
      *
      * @api
      *
-     * @param \Generated\Shared\Transfer\ModuleFilterTransfer|null $moduleFilterTransfer
-     *
-     * @return array<\Generated\Shared\Transfer\ModuleTransfer>
+     * @return array<\Generated\Shared\Transfer\ModuleTransfer|\Spryker\Shared\ModuleFinder\Transfer\Module>
      */
-    public function getProjectModules(?ModuleFilterTransfer $moduleFilterTransfer = null): array
+    public function getProjectModules(ModuleFilterTransfer|ModuleFilter|null $moduleFilterTransfer = null): array
     {
         return $this->getFactory()->createProjectModuleFinder()->getProjectModules($moduleFilterTransfer);
     }
@@ -36,11 +35,9 @@ class ModuleFinderFacade extends AbstractFacade implements ModuleFinderFacadeInt
      *
      * @api
      *
-     * @param \Generated\Shared\Transfer\ModuleFilterTransfer|null $moduleFilterTransfer
-     *
-     * @return array<\Generated\Shared\Transfer\ModuleTransfer>
+     * @return array<\Generated\Shared\Transfer\ModuleTransfer|\Spryker\Shared\ModuleFinder\Transfer\Module>
      */
-    public function getModules(?ModuleFilterTransfer $moduleFilterTransfer = null): array
+    public function getModules(ModuleFilterTransfer|ModuleFilter|null $moduleFilterTransfer = null): array
     {
         return $this->getFactory()->createModuleFinder()->getModules($moduleFilterTransfer);
     }
@@ -57,5 +54,29 @@ class ModuleFinderFacade extends AbstractFacade implements ModuleFinderFacadeInt
     public function getPackages(): array
     {
         return $this->getFactory()->createPackageFinder()->getPackages();
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @api
+     *
+     * @return array<string>
+     */
+    public function getInstalledPackageNames(): array
+    {
+        return $this->getFactory()->createComposerReader()->getInstalledPackageNames();
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @api
+     *
+     * @return array<string>
+     */
+    public function getDevPackageNames(): array
+    {
+        return $this->getFactory()->createComposerReader()->getDevPackageNames();
     }
 }

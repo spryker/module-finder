@@ -9,14 +9,10 @@ namespace Spryker\Zed\ModuleFinder\Business\Module\ModuleMatcher;
 
 use Generated\Shared\Transfer\ModuleFilterTransfer;
 use Generated\Shared\Transfer\ModuleTransfer;
+use Spryker\Shared\ModuleFinder\Transfer\Module;
+use Spryker\Shared\ModuleFinder\Transfer\ModuleFilter;
 
 interface ModuleMatcherInterface
 {
-    /**
-     * @param \Generated\Shared\Transfer\ModuleTransfer $moduleTransfer
-     * @param \Generated\Shared\Transfer\ModuleFilterTransfer $moduleFilterTransfer
-     *
-     * @return bool
-     */
-    public function matches(ModuleTransfer $moduleTransfer, ModuleFilterTransfer $moduleFilterTransfer): bool;
+    public function matches(ModuleTransfer|Module $moduleTransfer, ModuleFilterTransfer|ModuleFilter $moduleFilterTransfer): bool;
 }
