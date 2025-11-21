@@ -23,6 +23,16 @@ use Symfony\Component\Finder\SplFileInfo;
 
 class ProjectModuleFinder implements ProjectModuleFinderInterface
 {
+    /**
+     * Modular project structure path pattern: src/{Organization}/{Module}/src/{Organization}
+     */
+    protected const string MODULAR_STRUCTURE_PATH_PATTERN = 'src/%1$s/%2$s/src/%1$s';
+
+    /**
+     * Layered project structure path pattern: src/{Organization}/{Application}/{Module}
+     */
+    protected const string LAYERED_STRUCTURE_PATH_PATTERN = 'src/%1$s/%2$s/%3$s';
+
     public function __construct(
         protected ModuleFinderConfig $config,
         protected ModuleMatcherInterface $moduleMatcher,
@@ -233,9 +243,15 @@ class ProjectModuleFinder implements ProjectModuleFinderInterface
     protected function findUsedCoreModules(ModuleTransfer|Module $moduleTransfer): array
     {
         $usedModules = [];
+        $modulePaths = $this->getModulePaths($moduleTransfer);
+
+        if ($modulePaths === []) {
+            return $usedModules;
+        }
+
         $finder = new Finder();
         $finder->files()
-            ->in($this->getModulePath($moduleTransfer))
+            ->in($modulePaths)
             ->name('*.php')
             ->notName($this->config->getExcludedFileNames());
 
@@ -268,16 +284,47 @@ class ProjectModuleFinder implements ProjectModuleFinderInterface
         return $usedModules;
     }
 
-    protected function getModulePath(ModuleTransfer|Module $moduleTransfer): string
+    /**
+     * @return array<string>
+     */
+    protected function getModulePaths(ModuleTransfer|Module $moduleTransfer): array
     {
-        $path = $moduleTransfer->getPath();
-        $path .= sprintf(
-            'src/%1$s/%2$s/src/%1$s',
+        $basePath = $moduleTransfer->getPath();
+
+        $modularPath = $basePath . sprintf(
+            static::MODULAR_STRUCTURE_PATH_PATTERN,
             $moduleTransfer->getOrganization()->getName(),
             $moduleTransfer->getName(),
         );
 
-        return $path;
+        if (is_dir($modularPath)) {
+            return [$modularPath];
+        }
+
+        return $this->getLayeredStructurePathsFallback($moduleTransfer, $basePath);
+    }
+
+    /**
+     * @return array<string>
+     */
+    protected function getLayeredStructurePathsFallback(ModuleTransfer|Module $moduleTransfer, string $basePath): array
+    {
+        $paths = [];
+
+        foreach ($moduleTransfer->getApplications() as $application) {
+            $layeredPath = $basePath . sprintf(
+                static::LAYERED_STRUCTURE_PATH_PATTERN,
+                $moduleTransfer->getOrganization()->getName(),
+                $application->getName(),
+                $moduleTransfer->getName(),
+            );
+
+            if (is_dir($layeredPath)) {
+                $paths[] = $layeredPath;
+            }
+        }
+
+        return $paths;
     }
 
     protected function createModule(string $organization, string $moduleName): ModuleTransfer|Module
