@@ -137,9 +137,7 @@ class ModuleFinderConfig extends AbstractBundleConfig
      */
     public function getExcludedFileNames(): array
     {
-        return [
-            '*DependencyProvider.php',
-        ];
+        return [];
     }
 
     /**
